@@ -1,10 +1,10 @@
-setwd("path/to/project/folder") # Change to your project folder path
+setwd("/Users/eteich/Desktop/CitationBias/gendercitation") # Change to your project folder path
 source("HelperFunctions.R")
 library(pbmcapply);library(rvest)
 library(RJSONIO);library(textclean)
 
 # Change to the names of your journal folders within project folder
-journal_folders=c("journal1","journal2","journal3")
+journal_folders=c("../CM_physics/PRB")
 
 # Select journal -- Will need to go back and repeat for each journal!
 this_journal=journal_folders[1]
@@ -21,7 +21,7 @@ first_names=pbmclapply(1:length(all_auth_names),get.all.given,
 initials=unlist(lapply(first_names,is.initials))
 
 # Determine which articles only have initial information
-needed_dois=df$DI[initials==T]
+needed_dois=data.frame$DI[initials==T]
 needed_names=all_auth_names[initials==T]
 
 # Prep urls for crossref pull requests

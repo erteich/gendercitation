@@ -1,16 +1,18 @@
-setwd("path/to/project/folder") # Change to your project folder path
+setwd("/Users/eteich/Desktop/CitationBias/gendercitation") # Change to your project folder path
 source("HelperFunctions.R")
 library(bibliometrix)
 library(rvest)
 library(dplyr)
+## ADDED BY EGTEICH
+library(stringr)
 
 # Change to the names of your journal folders within project folder
-journal_folders=c("journal1","journal2","journal3")
+journal_folders=c("../CM_physics/PRB")
 
 for(i in journal_folders){
   # For each journal, find all data files within folder
   files=list.files(i)
-  
+
   data.frame=NULL
   for(j in files){
     # For each file, read data in, convert to data frame, and concatenate
@@ -48,19 +50,23 @@ for(i in journal_folders){
   # TC=total citation, PD=month/day, PY=year, DI=DOI
   data.frame=data.frame %>% 
     select(AF, SO, DT, CR, TC, PD, PY, DI)
-  
+
   # Translate month/day to numeric month
   data.frame$PD=unlist(lapply(1:nrow(data.frame),get.date,pd=data.frame$PD))
   data.frame$PD=as.numeric(data.frame$PD)
   data.frame=data.frame[data.frame$PD%in%c(1:12),]
-  
+
   # Subset to only articles (i.e., remove editorial content etc.)
-  data.frame=data.frame[data.frame$DT%in%c("Article","Review"),]
-  
+  data.frame=data.frame[data.frame$DT%in%c("ARTICLE","REVIEW"),]
+
   # Standardize dois and reference lists to lowercase
   data.frame$DI=tolower(data.frame$DI)
   data.frame$CR=tolower(data.frame$CR)
   
+  ## ADDED BY EGTEICH
+  # Make names title-case..
+  data.frame$AF=(str_to_title(data.frame$AF))
+
   # Optional: subset data by date
   #data.frame=data.frame[data.frame$PY>=1995,]
   

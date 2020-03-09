@@ -1,4 +1,4 @@
-setwd("path/to/project/folder") # Change to your project folder path
+setwd("/Users/eteich/Desktop/CitationBias/gendercitation") # Change to your project folder path
 source("HelperFunctions.R")
 library(tidyverse);library(parallel)
 library(pbmcapply)
@@ -49,6 +49,7 @@ multiple_occurrences=lastname_occurrences[lastname_occurrences>1]
 may_have_variants=unlist(pbmclapply(names(multiple_occurrences),find.variants,
                          allfirsts,alllasts,mc.cores=cores))
 may_have_variants=names(multiple_occurrences[may_have_variants==1])
+print(may_have_variants)
 
 # Detect name variants and assign all instances to the most detailed version
 # E.g., Ray Dolan, Raymond Dolan, & Ray J Dolan --> Raymond J Dolan
@@ -56,8 +57,9 @@ may_have_variants=names(multiple_occurrences[may_have_variants==1])
 # NOTE: This function takes some power and some time (best on a cluster)
 fn_matched=pbmclapply(1:length(first_names),match.variants.outer,
                       first_names,last_names,allfirsts,alllasts,
-                      may_have_variants,nickname.gends,mc.cores=cores)
+                      may_have_variants,namegends,mc.cores=cores)
 allfirsts_matched=as.vector(unlist(fn_matched))
+#print(fn_matched)
 
 # Test out whether it worked as expected by comparing variants before/after
 # Can substitute Dolan for any name in your dataset that had variants

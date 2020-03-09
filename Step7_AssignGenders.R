@@ -1,9 +1,11 @@
-setwd("path/to/project/folder") # Change to your project folder path
+setwd("/Users/eteich/Desktop/CitationBias/gendercitation") # Change to your project folder path
 source("HelperFunctions.R")
 library(rjson);library(pbmcapply)
 
 # Load in article dataset from step 5
-load("df5_articledata_matchednames.RData")
+#load("df5_articledata_matchednames.RData")
+## Skip step 5
+load("df4_articledata_cleannames.RData")
 
 # Load in gender dataset from step 6
 load("df6_namegends.RData")
@@ -29,8 +31,19 @@ article.data$AG=unlist(article_auth_gends)
 
 # See proportion of articles for which gender could be assigned to both
 # first and last author
-table(!grepl("U",article.data$AG))/nrow(article.data)
+tt = table(!grepl("U",article.data$AG))/nrow(article.data)
+print(tt)
 
 # Save new article data with gender categories
 save(article.data, file="df7_articledata_withgenders.RData")
+
+## Create gender category vectors
+gend_group_4=unlist(lapply(article.data$AG,transform.cat.4))
+gend_group_4=factor(gend_group_4,lev=c("MM","WM","MW","WW","NA"))
+
+print(sum(gend_group_4=="MM"))
+print(sum(gend_group_4=="WM"))
+print(sum(gend_group_4=="MW"))
+print(sum(gend_group_4=="WW"))
+print(sum(gend_group_4=="NA"))
 

@@ -1,4 +1,4 @@
-setwd("path/to/project/folder") # Change to your project folder path
+setwd("/Users/eteich/Desktop/CitationBias/gendercitation") # Change to your project folder path
 source("HelperFunctions.R")
 library(pbmcapply);library(stringr)
 library(RJSONIO);library(textclean)
