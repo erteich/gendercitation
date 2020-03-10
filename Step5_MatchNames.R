@@ -1,4 +1,4 @@
-setwd("/Users/eteich/Desktop/CitationBias/gendercitation") # Change to your project folder path
+setwd("/Users/erteich/Desktop/gendercitation") # Change to your project folder path
 source("HelperFunctions.R")
 library(tidyverse);library(parallel)
 library(pbmcapply)

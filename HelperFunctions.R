@@ -718,9 +718,9 @@ f2plot=function(data,title,yl=T,xl=T,all=F,shortlab=F){
                            labels=c("-30%","-15%","0%","+15%","+30%"),
                            limits=c(-.31,.31))
   }else{
-    p=p+scale_y_continuous(breaks=seq(-.4,.4,.2),
-                           labels=c("-40%","-20%","0%","+20%","+40%"),
-                           limits=c(-.4,.4))
+    p=p+scale_y_continuous(breaks=seq(-.6,.4,.2),
+                           labels=c("-60%","-40%","-20%","0%","+20%","+40%"),
+                           limits=c(-.6,.4))
   }
 }
 f4Aplot=function(data,title){

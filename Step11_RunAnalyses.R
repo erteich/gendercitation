@@ -1,4 +1,4 @@
-setwd("path/to/project/folder") # Change to your project folder path
+setwd("/Users/erteich/Desktop/gendercitation") # Change to your project folder path
 source("HelperFunctions.R")
 library(ggplot2);library(mgcv)
 library(boot);library(pbmcapply)
@@ -12,7 +12,8 @@ cores=detectCores()
 
 ## Find subset of articles for analysis
 ## I.e., articles in a specific window that contain at least one relevant reference
-time_window=article.data$PY%in%c(2009:2018)
+#time_window=article.data$PY%in%c(2009:2018)
+time_window=article.data$PY%in%c(2009:2020)
 has_citations=ref_proportions[,13]>0
 subset_articles=time_window & has_citations
 
@@ -131,6 +132,8 @@ boot.mm.temp=boot(ref_tot_sub[gend2_sub=="MM",],citegap.temp,
 boot.worw.temp=boot(ref_tot_sub[gend2_sub=="W|W",],citegap.temp,
                     years=year_sub[gend2_sub=="W|W"],return="all",R=500)
 
+print(ref_tot_sub[gend2_sub=="MM"])
+print(ref_tot_sub[gend2_sub=="W|W"])
 # Create ggplot compatible data frames
 plot.df.mm.temp=get.plotdf.temp(boot.mm.temp)
 plot.df.worw.temp=get.plotdf.temp(boot.worw.temp)

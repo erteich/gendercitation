@@ -1,4 +1,4 @@
-setwd("/Users/eteich/Desktop/CitationBias/gendercitation") # Change to your project folder path
+setwd("/Users/erteich/Desktop/gendercitation") # Change to your project folder path
 source("HelperFunctions.R")
 library(bibliometrix)
 library(rvest)
@@ -7,7 +7,7 @@ library(dplyr)
 library(stringr)
 
 # Change to the names of your journal folders within project folder
-journal_folders=c("../CM_physics/PRB")
+journal_folders=c("CM_physics/PRB")
 
 for(i in journal_folders){
   # For each journal, find all data files within folder

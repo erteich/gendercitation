@@ -1,10 +1,10 @@
-setwd("/Users/eteich/Desktop/CitationBias/gendercitation") # Change to your project folder path
+setwd("/Users/erteich/Desktop/gendercitation") # Change to your project folder path
 source("HelperFunctions.R")
 library(pbmcapply);library(rvest)
 library(RJSONIO);library(textclean)
 
 # Change to the names of your journal folders within project folder
-journal_folders=c("../CM_physics/PRB")
+journal_folders=c("CM_physics/PRB")
 
 # Select journal -- Will need to go back and repeat for each journal!
 this_journal=journal_folders[1]

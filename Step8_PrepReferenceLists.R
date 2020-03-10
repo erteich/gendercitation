@@ -1,4 +1,4 @@
-setwd("path/to/project/folder") # Change to your project folder path
+setwd("/Users/erteich/Desktop/gendercitation") # Change to your project folder path
 source("HelperFunctions.R")
 library(pbmcapply);library(mgcv)
 library(textclean)
@@ -31,7 +31,7 @@ self.authored=pbmclapply(1:length(first_auths),get.self.cites,
 # Get variables for article gender model
 num_papers=unlist(lapply(self.authored,str_count, ", "))+1
 log_seniority=log(num_papers)
-review=article.data$DT=="Review"
+review=article.data$DT=="REVIEW"
 log_teamsize=log(lengths(all_auth_names))
 journal=article.data$SO
 month_from_base=(article.data$PY-min(article.data$PY))+(article.data$PD/12)
@@ -59,15 +59,25 @@ uncond_expecs=do.call(rbind,uncond_expecs)
 # To be used for estimating expected conditional citation proportions in step 9
 # Note: Some settings on the GAM should be checked manually (e.g., spline DFs)
 # See the documentation by running "?gam"
+
+# genderGAM=gam(list(gender_cat~s(month_from_base)+s(log_seniority)+
+#                     s(log_teamsize)+journal+review,
+#                   ~s(month_from_base)+s(log_seniority)+
+#                     s(log_teamsize)+journal+review,
+#                   ~s(month_from_base)+s(log_seniority)+
+#                     s(log_teamsize)+journal+review),family=multinom(K=3))
+# cond_expecs=predict(genderGAM,newdata=data.frame(month_from_base=month_from_base,
+#                     log_seniority=log_seniority,log_teamsize=log_teamsize,
+#                     journal=journal,review=review),type="response")
+
 genderGAM=gam(list(gender_cat~s(month_from_base)+s(log_seniority)+
-                    s(log_teamsize)+journal+review,
-                  ~s(month_from_base)+s(log_seniority)+
-                    s(log_teamsize)+journal+review,
-                  ~s(month_from_base)+s(log_seniority)+
-                    s(log_teamsize)+journal+review),family=multinom(K=3))
+                     s(log_teamsize),
+                   ~s(month_from_base)+s(log_seniority)+
+                     s(log_teamsize),
+                   ~s(month_from_base)+s(log_seniority)+
+                     s(log_teamsize)),family=multinom(K=3))
 cond_expecs=predict(genderGAM,newdata=data.frame(month_from_base=month_from_base,
-                    log_seniority=log_seniority,log_teamsize=log_teamsize,
-                    journal=journal,review=review),type="response")
+                    log_seniority=log_seniority,log_teamsize=log_teamsize),type="response")
 
 # Save article data and citation expectation data
 save(article.data,uncond_expecs,cond_expecs,

@@ -1,8 +1,8 @@
-setwd("/Users/eteich/Desktop/CitationBias/gendercitation") # Change to your project folder path
+setwd("/Users/erteich/Desktop/gendercitation") # Change to your project folder path
 source("HelperFunctions.R")
 
 # Change to the names of your journal folders within project folder
-journal_folders=c("../CM_physics/PRB")
+journal_folders=c("CM_physics/PRB")
 
 # Create empty data frame for all-journal data
 article.data=NULL

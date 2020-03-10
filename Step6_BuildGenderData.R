@@ -1,4 +1,4 @@
-setwd("/Users/eteich/Desktop/CitationBias/gendercitation") # Change to your project folder path
+setwd("/Users/erteich/Desktop/gendercitation") # Change to your project folder path
 source("HelperFunctions.R")
 library(rjson);library(pbmcapply)
 
@@ -53,7 +53,8 @@ if("df6_namegends.RData"%in%list.files()){
 
 # Enter your API key here for gender-api.com
 # Run 'sum(is.na(namegends$prob.m))' to see how many credits you'll need
-gender_api_key="yaNgmKTPpBeDtkDGHy"
+# gender_api_key="yaNgmKTPpBeDtkDGHy" #
+gender_api_key="RSjvBbTBPhjulobcEp"
 
 # Determine which names have yet to be queried from gender-api
 r=which(is.na(namegends$prob.m))
