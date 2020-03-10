@@ -64,14 +64,14 @@ get.cr.auths=function(json_author){
   firsts=unlist(lapply(json_author,get.cr.first))
   Encoding(firsts)="latin1"
   firsts=replace_non_ascii(firsts)
-  
+
   names_sep=unlist(lapply(json_author,get.cr.sep))
   Encoding(names_sep)="latin1"
   names_sep=replace_non_ascii(names_sep)
-  
+
   names_togeth=paste(names_sep,collapse="; ")
   names_togeth=replace_non_ascii(names_togeth)
-  
+
   return(list(firsts=firsts,all=names_togeth))
 }
 get.jneuro.auths=function(json_url){
@@ -118,7 +118,7 @@ add.miss.comma=function(x,authlist,dois){
     name=auths[i]
     json_file=paste0("https://api.crossref.org/v1/works/http://dx.doi.org/",doi)
     json_data=try(RJSONIO::fromJSON(json_file),silent=T)
-    
+
     if(class(json_data)!="try-error"){
       if(!is.null(json_data$message$author)){
         json_author=json_data$message$author
@@ -188,7 +188,7 @@ get.preferred=function(x){
   }else if(grepl("-",substr(x,1,2))){
     if(substr(x,1,1)=="-"){
       return(substr(x,2,nchar(x)))
-    }else if(substr(x,2,2)=="-" & 
+    }else if(substr(x,2,2)=="-" &
              substr(x,1,1)!="A" &
              substr(x,1,1)!="I"){
       return(substr(x,3,nchar(x)))
@@ -224,7 +224,7 @@ match.initials=function(x,first_names,last_names,allfirsts,alllasts){
           samelast.concat=tolower(gsub("[[:punct:][:blank:]]","",samelast.full))
           samelast.clean=get.preferred(samelast.full)
           samelast.initials=extract.initials(samelast.full)
-          if(samelast.full!=toupper(samelast.full) & 
+          if(samelast.full!=toupper(samelast.full) &
              (samelast.initials==target.initials)){
             allsimilar.full=c(allsimilar.full,samelast.full)
             allsimilar.concat=c(allsimilar.concat,samelast.concat)
@@ -241,7 +241,7 @@ match.initials=function(x,first_names,last_names,allfirsts,alllasts){
           matched.name=sort(table(allsimilar.full),decreasing=T)
           matched.name=names(matched.name)[1]
           authors[i]=matched.name
-        }else if(length(contained)>0 & 
+        }else if(length(contained)>0 &
                  sum(contained)==length(contained)){
           matched.name=sort(table(allsimilar.full),decreasing=T)
           matched.name=names(matched.name)[1]
@@ -275,28 +275,28 @@ match.variants.inner=function(name,allfirsts,alllasts,nickname.gends){
   samelast.clean=unlist(lapply(samelast.full,get.preferred))
   samelast.initials=extract.initials(samelast.full)
   samelast.gends=unlist(lapply(samelast.clean,match.gend,nickname.gends))
-  
+
   name.index=which(samelast.full==first)
-  
+
   this.full=samelast.full[name.index]
   samelast.full=samelast.full[-name.index]
-  
+
   this.clean=samelast.clean[name.index]
   samelast.clean=samelast.clean[-name.index]
-  
+
   this.initials=samelast.initials[name.index]
   samelast.initials=samelast.initials[-name.index]
-  
+
   this.gend=samelast.gends[name.index]
   samelast.gends=samelast.gends[-name.index]
-  
+
   this.nicknames=which(nicknames[,1]==tolower(this.clean))
   this.nicknames=unique(as.vector(nicknames[this.nicknames,-1]))
   this.nicknames=this.nicknames[this.nicknames!=""]
-  
-  matches=which((samelast.clean==this.clean | 
-                   tolower(samelast.clean)%in%this.nicknames) & 
-                grepl(this.initials,samelast.initials) & 
+
+  matches=which((samelast.clean==this.clean |
+                   tolower(samelast.clean)%in%this.nicknames) &
+                grepl(this.initials,samelast.initials) &
                   samelast.gends==this.gend)
   if(length(matches)==1){
     if(nchar(samelast.full[matches])>nchar(first)){
@@ -358,7 +358,7 @@ match.common=function(x,namegends,commonnames){
 gend.to.auths=function(first_last_auths,namegends,threshold=0.7){
   fa_index=which(namegends$name==first_last_auths[1])
   la_index=which(namegends$name==first_last_auths[2])
-  
+
   fa_gend=ifelse(namegends$prob.m[fa_index]>threshold,"M",
                  ifelse(namegends$prob.w[fa_index]>threshold,"W","U"))
   la_gend=ifelse(namegends$prob.m[la_index]>threshold,"M",
@@ -376,14 +376,14 @@ get.cited.indices=function(x,DI,CR){
   cited.dois=cited.split[cited.dois]
   cited.dois=tolower(gsub(";|,|\\[|\\]","",cited.dois))
   cited.dois=cited.dois[cited.dois!="doi"]
-  
+
   cited.indices=paste(which(DI%in%cited.dois),collapse=", ")
   return(cited.indices)
 }
 get.self.cites=function(x,first_auths,last_auths){
   these_auths=c(first_auths[[x]],last_auths[[x]])
-  
-  self=paste(which(first_auths%in%these_auths | 
+
+  self=paste(which(first_auths%in%these_auths |
                      last_auths%in%these_auths),collapse=", ")
   return(self)
 }
@@ -418,13 +418,13 @@ get.ref.props=function(x,article.data,uncond_expecs,cond_expecs){
     gender.table=table(factor(cited.genders,lev=0:3))
     observed.props=gender.table/sum(gender.table)
     uncond.exp.props=uncond_expecs[x,]
-    
+
     if(length(cited.notself)>1){
       cond.exp.props=apply(cond_expecs[cited.notself,],2,mean)
     }else{
       cond.exp.props=cond_expecs[cited.notself,]
     }
-    
+
     return(c(as.numeric(observed.props),
              as.numeric(uncond.exp.props),
              as.numeric(cond.exp.props),
@@ -439,7 +439,7 @@ get.prev.coauths=function(x,first_auths,last_auths,all_auth_names,month_from_bas
   fa_name=first_auths[[x]]
   la_name=last_auths[[x]]
   this_month=month_from_base[x]
-  
+
   auths_in=rep(FALSE,length(all_auth_names))
   sub_auth_names=all_auth_names[month_from_base<=this_month]
   auths_in_sub=sapply(seq_along(sub_auth_names),
@@ -447,24 +447,24 @@ get.prev.coauths=function(x,first_auths,last_auths,all_auth_names,month_from_bas
   auths_in_sub=apply(auths_in_sub,2,sum)>0
   auths_in[month_from_base<=this_month]=auths_in_sub
   auths_in=which(auths_in)
-  
+
   prev_coauths=unique(unlist(all_auth_names[auths_in]))
   prev_coauths=prev_coauths[!(prev_coauths%in%c(fa_name,la_name))]
   return(prev_coauths)
 }
 get.ma.overrep=function(x,prev_coauths,all_auth_names,month_from_base,author_gends){
   this_month=month_from_base[x]
-  
+
   prev_coauth=prev_coauths[[x]]
   prev_coauth_gends=author_gends$gend[author_gends$name%in%prev_coauth]
-  
+
   if(length(prev_coauth_gends)>0){
     pc_man_prop=sum(prev_coauth_gends=="M")/sum(prev_coauth_gends!="U")
-    
+
     whole_field=unique(unlist(all_auth_names[month_from_base<=this_month]))
     whole_field_gends=author_gends$gend[author_gends$name%in%whole_field]
     wf_man_prop=sum(whole_field_gends=="M")/sum(whole_field_gends!="U")
-    
+
     return(pc_man_prop-wf_man_prop)
   }else{
     return(NA)
@@ -472,12 +472,12 @@ get.ma.overrep=function(x,prev_coauths,all_auth_names,month_from_base,author_gen
 }
 get.mmp.overrep=function(x,prev_coauths,all_auth_names,month_from_base,article_gends){
   this_month=month_from_base[x]
-  
+
   prev_coauth=prev_coauths[[x]]
-  
+
   pc_papers=rep(0,length(all_auth_names))
   sub_auth_names=all_auth_names[month_from_base<this_month]
-  
+
   pc_papers_sub=sapply(seq_along(sub_auth_names),
                        function(x){prev_coauth %in% sub_auth_names[[x]]})
   if(is.null(nrow(pc_papers_sub))){
@@ -487,14 +487,14 @@ get.mmp.overrep=function(x,prev_coauths,all_auth_names,month_from_base,article_g
     pc_papers[month_from_base<this_month]=apply(pc_papers_sub,2,sum)
     pc_papers=which(pc_papers>0)
   }
-  
+
   if(length(pc_papers)>0){
     pc_paper_gends=article_gends[pc_papers]
     pc_mm_prop=sum(pc_paper_gends=="MM")/sum(!grepl("U",pc_paper_gends))
-    
+
     all_paper_gends=article_gends[month_from_base<this_month]
     all_mm_prop=sum(all_paper_gends=="MM")/sum(!grepl("U",all_paper_gends))
-    
+
     return(pc_mm_prop-all_mm_prop)
   }else{
     return(NA)
@@ -538,7 +538,7 @@ netgap=function(network_measure,i=NULL,groups,cites,verbose=F){
   }else{
     return(vals)
   }
-  
+
 }
 medover=function(mm_overcite,i=NULL,groups,cites,verbose=F,
                  network=F,ma_overrep=NULL,mmp_overrep=NULL){
@@ -603,7 +603,7 @@ citegap.temp2=function(citation.totals,i=NULL,years){
   unique.years=sort(unique(years),decreasing=F)
   years=years[i]
   citation.totals=citation.totals[i,]
-  
+
   year.vals=matrix(0,nrow=length(unique.years),ncol=8)
   for(j in 1:length(unique.years)){
     tyear=unique.years[j]
@@ -613,7 +613,7 @@ citegap.temp2=function(citation.totals,i=NULL,years){
     year.vals[j,]=c(obs/tot,exp/tot)
   }
   out=year.vals
-  
+
   return(out)
 }
 netgap.temp=function(network_measure,i=NULL,groups,cites,years){
@@ -623,7 +623,7 @@ netgap.temp=function(network_measure,i=NULL,groups,cites,years){
   groups=groups[i]
   cites=cites[i]
   years=years[i]
-  
+
   year.vals=matrix(0,nrow=length(unique.years),ncol=4)
   for(j in 1:length(unique.years)){
     tyear=unique.years[j]
@@ -638,7 +638,7 @@ netgap.temp=function(network_measure,i=NULL,groups,cites,years){
     year.vals[j,]=vals
   }
   out=year.vals
-  
+
   return(out)
 }
 get.plotdf=function(boot){
@@ -650,38 +650,81 @@ get.plotdf=function(boot){
                                 "Man &\nWoman","Woman &\nWoman"))
   return(plotdf)
 }
-get.plotdf.temp=function(boot){
+get.plotdf.temp=function(boot,unique.years){
   plotdf=data.frame(Group=rep(c("Man &\nMan","Woman &\nMan","Man &\nWoman",
-                                "Woman &\nWoman"),each=10),Year=rep(2009:2018,4),
+                                "Woman &\nWoman"),each=length(unique.years)),
+                    Year=rep(unique.years,4),
                     Prop=as.vector(boot$t0),SE=apply(boot$t,2,sd))
   plotdf$Group<-factor(plotdf$Group,
                        levels=c("Man &\nMan","Woman &\nMan",
                                 "Man &\nWoman","Woman &\nWoman"))
   return(plotdf)
 }
-get.plotdf.temp2=function(boot){
-  plotdf=data.frame(Year=rep(2009:2018,8),
-                    Type=c(rep("Observed",40),rep("Expected",40)),
-                    Group=rep(c("Man &\nMan","Woman &\nMan","Man &\nWoman",
-                                "Woman &\nWoman"),each=10),
+get.plotdf.temp2=function(boot,unique.years){
+  plotdf=data.frame(Year=rep(unique.years,8),
+                    Type=c(rep("Observed",4*length(unique.years)),
+                           rep("Expected",4*length(unique.years))),
+                    Group=rep(rep(c("Man &\nMan","Woman &\nMan","Man &\nWoman",
+                                "Woman &\nWoman"),each=length(unique.years)),2),
                     Prop=as.vector(boot$t0),SE=apply(boot$t,2,sd))
   plotdf$Group<-factor(plotdf$Group,
                        levels=c("Man &\nMan","Woman &\nMan",
                                 "Man &\nWoman","Woman &\nWoman"))
-  
   plotdf=as.data.table(plotdf)
-  plotdf[Group=="Man &\nMan",y_min:=0.56]
-  plotdf[Group=="Man &\nMan",y_max:=0.66]
-  plotdf[Group=="Woman &\nMan",y_min:=0.20]
-  plotdf[Group=="Woman &\nMan",y_max:=0.27]
-  plotdf[Group=="Man &\nWoman",y_min:=0.077]
-  plotdf[Group=="Man &\nWoman",y_max:=0.103]
-  plotdf[Group=="Woman &\nWoman",y_min:=0.04]
-  plotdf[Group=="Woman &\nWoman",y_max:=0.08]
-  
+
   return(plotdf)
 }
-f2plot=function(data,title,yl=T,xl=T,all=F,shortlab=F){
+get.ylim=function(plotdf1,plotdf2,group,type){
+  if(type=="lower"){
+    return(0.975*min(c(plotdf1$Prop[plotdf1$Group==group]-
+                  plotdf1$SE[plotdf1$Group==group],
+                plotdf2$Prop[plotdf2$Group==group]-
+                  plotdf2$SE[plotdf2$Group==group])))
+  }else if(type=="upper"){
+    return(1.025*max(c(plotdf1$Prop[plotdf1$Group==group]-
+                         plotdf1$SE[plotdf1$Group==group],
+                       plotdf2$Prop[plotdf2$Group==group]-
+                         plotdf2$SE[plotdf2$Group==group])))
+  }else{stop("'type' must be either 'lower' or 'upper'")}
+}
+equate.plotdf.lims=function(plotdf1,plotdf2){
+  plotdf1[Group=="Man &\nMan",y_min:=get.ylim(plotdf1,plotdf2,
+                                             "Man &\nMan","lower")]
+  plotdf1[Group=="Man &\nMan",y_max:=get.ylim(plotdf1,plotdf2,
+                                             "Man &\nMan","upper")]
+  plotdf1[Group=="Woman &\nMan",y_min:=get.ylim(plotdf1,plotdf2,
+                                               "Woman &\nMan","lower")]
+  plotdf1[Group=="Woman &\nMan",y_max:=get.ylim(plotdf1,plotdf2,
+                                               "Woman &\nMan","upper")]
+  plotdf1[Group=="Man &\nWoman",y_min:=get.ylim(plotdf1,plotdf2,
+                                               "Man &\nWoman","lower")]
+  plotdf1[Group=="Man &\nWoman",y_max:=get.ylim(plotdf1,plotdf2,
+                                               "Man &\nWoman","upper")]
+  plotdf1[Group=="Woman &\nWoman",y_min:=get.ylim(plotdf1,plotdf2,
+                                                 "Woman &\nWoman","lower")]
+  plotdf1[Group=="Woman &\nWoman",y_max:=get.ylim(plotdf1,plotdf2,
+                                                 "Woman &\nWoman","upper")]
+
+  plotdf2[Group=="Man &\nMan",y_min:=get.ylim(plotdf1,plotdf2,
+                                              "Man &\nMan","lower")]
+  plotdf2[Group=="Man &\nMan",y_max:=get.ylim(plotdf1,plotdf2,
+                                              "Man &\nMan","upper")]
+  plotdf2[Group=="Woman &\nMan",y_min:=get.ylim(plotdf1,plotdf2,
+                                                "Woman &\nMan","lower")]
+  plotdf2[Group=="Woman &\nMan",y_max:=get.ylim(plotdf1,plotdf2,
+                                                "Woman &\nMan","upper")]
+  plotdf2[Group=="Man &\nWoman",y_min:=get.ylim(plotdf1,plotdf2,
+                                                "Man &\nWoman","lower")]
+  plotdf2[Group=="Man &\nWoman",y_max:=get.ylim(plotdf1,plotdf2,
+                                                "Man &\nWoman","upper")]
+  plotdf2[Group=="Woman &\nWoman",y_min:=get.ylim(plotdf1,plotdf2,
+                                                  "Woman &\nWoman","lower")]
+  plotdf2[Group=="Woman &\nWoman",y_max:=get.ylim(plotdf1,plotdf2,
+                                                  "Woman &\nWoman","upper")]
+
+  return(list(plotdf1,plotdf2))
+}
+f2plot=function(data,title,ymin,ymax,yl=T,xl=T,shortlab=F){
   p=ggplot(data,aes(x=Group, y=Prop, fill=Group))+
     geom_bar(stat="identity", color="black",position=position_dodge())+
     geom_errorbar(aes(ymin=(Prop-SE),
@@ -713,17 +756,14 @@ f2plot=function(data,title,yl=T,xl=T,all=F,shortlab=F){
   }else{
     p=p+ylab(NULL)
   }
-  if(all==T){
-    p=p+scale_y_continuous(breaks=seq(-.30,.30,.15),
-                           labels=c("-30%","-15%","0%","+15%","+30%"),
-                           limits=c(-.31,.31))
-  }else{
-    p=p+scale_y_continuous(breaks=seq(-.6,.4,.2),
-                           labels=c("-60%","-40%","-20%","0%","+20%","+40%"),
-                           limits=c(-.6,.4))
-  }
+  min.break=ceiling(ymin*10)/10
+  max.break=floor(ymax*10)/10
+  breaks=seq(min.break,max.break,(max.break-min.break)/4)
+  p=p+scale_y_continuous(breaks=breaks,
+                         limits=c(ymin,ymax))
+  return(p)
 }
-f4Aplot=function(data,title){
+f4Aplot=function(data,title,ymin,ymax){
   p=ggplot(data,aes(x=Year, y=Prop, color=Group))+
     geom_line()+
     geom_point()+
@@ -737,10 +777,14 @@ f4Aplot=function(data,title){
                                 "Woman &\nMan"="darkslategray4",
                                 "Man &\nWoman"="lightcyan3",
                                 "Woman &\nWoman"="lightsalmon3"))+
-    ylab("Percent over/undercitation")+xlab("Year")+
-    scale_y_continuous(breaks=seq(-.4,.4,.2),
-                       labels=c("-40%","-20%","0%","+20%","+40%"),
-                       limits=c(-.4,.4))
+    ylab("Percent over/undercitation")+xlab("Year")
+
+  min.break=ceiling(ymin*10)/10
+  max.break=floor(ymax*10)/10
+  breaks=seq(min.break,max.break,(max.break-min.break)/4)
+  p=p+scale_y_continuous(breaks=breaks,
+                         limits=c(ymin,ymax))
+
   return(p)
 }
 f4Bplot=function(data,title){
@@ -781,5 +825,3 @@ f5plot=function(data,title){
                        limits=c(-.1,.1))
   return(p)
 }
-
-
