@@ -49,9 +49,9 @@ boot.cn=boot(ref_tot_sub,citegap,R=500,type='conditional')
 plot.df.randomdraw=get.plotdf(boot.rd)
 plot.df.conditional=get.plotdf(boot.cn)
 p.all.rd=f2plot(plot.df.randomdraw,"Gap relative to literature",
-                ymin=-0.35,ymax=0.35)
+                ymin=-0.6,ymax=0.2)
 p.all.cn=f2plot(plot.df.conditional,"Gap conditional on characteristics",
-                ymin=-0.35,ymax=0.35)
+                ymin=-0.4,ymax=0.3)
 
 # View plots
 p.all.rd
@@ -93,11 +93,11 @@ plot.df.worw=get.plotdf(boot.worw)
 plot.df.wm=get.plotdf(boot.wm)
 plot.df.mw=get.plotdf(boot.mw)
 plot.df.ww=get.plotdf(boot.ww)
-p.mm=f2plot(plot.df.mm,"Citing: MM",ymin=-0.35,ymax=0.35)
-p.worw=f2plot(plot.df.worw,"Citing: W or W",ymin=-0.35,ymax=0.35)
-p.wm=f2plot(plot.df.wm,"Citing: WM",ymin=-0.35,ymax=0.35)
-p.mw=f2plot(plot.df.mw,"Citing: MW",ymin=-0.35,ymax=0.35)
-p.ww=f2plot(plot.df.ww,"Citing: WW",ymin=-0.35,ymax=0.35)
+p.mm=f2plot(plot.df.mm,"Citing: MM",ymin=-1,ymax=1)
+p.worw=f2plot(plot.df.worw,"Citing: W or W",ymin=-1,ymax=1)
+p.wm=f2plot(plot.df.wm,"Citing: WM",ymin=-0.6,ymax=0.5)
+p.mw=f2plot(plot.df.mw,"Citing: MW",ymin=-0.6,ymax=0.5)
+p.ww=f2plot(plot.df.ww,"Citing: WW",ymin=-0.6,ymax=0.5)
 
 # View plots
 p.mm
@@ -134,8 +134,6 @@ boot.mm.temp=boot(ref_tot_sub[gend2_sub=="MM",],citegap.temp,
 boot.worw.temp=boot(ref_tot_sub[gend2_sub=="W|W",],citegap.temp,
                     years=year_sub[gend2_sub=="W|W"],return="all",R=500)
 
-print(ref_tot_sub[gend2_sub=="MM"])
-print(ref_tot_sub[gend2_sub=="W|W"])
 # Create ggplot compatible data frames
 unique.years=sort(unique(year_sub))
 plot.df.mm.temp=get.plotdf.temp(boot.mm.temp,unique.years)
